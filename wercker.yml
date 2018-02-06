@@ -42,7 +42,7 @@ deploy:
       code: sed -ie "s/REPLACE_WITH_WERCKER_GIT_COMMIT/$WERCKER_GIT_COMMIT/g" service.yml
     - script:
       name: update image build with DOCKER_REPOSITORY
-      code: sed -ie "s/REPLACE_WITH_DOCKER_REPOSITORY/$DOCKER_REPOSITORY/g" service.yml
+      code: sed -ie "s;REPLACE_WITH_DOCKER_REPOSITORY;'$DOCKER_REPOSITORY';g" service.yml
     - script:
       name: show file
       code: cat service.yml
