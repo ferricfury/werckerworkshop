@@ -140,7 +140,14 @@ DOCKER_REPOSITORY | yourDockerAccount/werckerworkshop
 DOCKER_USERNAME | YourUsername
 DOCKER_PASSWORD | YourPassword
 
+# Step 12: Commit Changes
+Now commit our changes to GitHub. For example:
 
+``` 
+git add .
+git commit -"Adding Changes to Wercker file"
+git push 
+```
 
 
 
