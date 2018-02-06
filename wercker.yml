@@ -1,3 +1,19 @@
+box: node
+build:
+  steps:
+    - npm-install
+    - npm-test
+    - script:
+        name: oracle jet build
+        code: |
+          npm install -g @oracle/ojet-cli
+          ojet build
+    - script:
+        name: copy code to output
+        code: cp -r web "$WERCKER_OUTPUT_DIR"
+    - script:
+        name: copy yml file to output
+        code: cp service.yml "$WERCKER_OUTPUT_DIR"
 push-release:
   box:
     id: nginx:alpine
