@@ -41,6 +41,16 @@ git push
 
 To create an application in Wercker log in a the website and click "Create your first application" it will ask you to associate your GitHub account.
 
-Once that is working you know have to tell the project what repository to build. To do this you must Select a Repository. You should be able to see the project we forked earlier called werckerworkshop.
+Once that is working you know have to tell the project what repository to build. To do this you must Select a Repository. You should be able to see the project we forked earlier called werckerworkshop. Select it and click next. You will than be asked to add an SSH key to your GitHUb account this will give Wercker access to your project and add a webhook so that the build will be triggered when you check the project in. Click next. On the review page check everything looks good and then click next.
+
+# Step 6: The Wercker File
+
+The next screen asks you to add a wercker.yaml file to the base of the project. In the drop down menu select node.js as the project language.
+
+It will then create a sample wercker.yaml file for you. In your project add a file called wercker.yaml and copy and paste the contents of the sample wercker file into the this file.
+
+
+
+
 
 
