@@ -171,10 +171,80 @@ git commit -"Making Title Change"
 git push 
 ```
 
+Both the builds should now be working. If you go to Docker hub and look at you repository and to the *tags* tab you should now see that there is a build there which is the container you just built. 
 
+The Tag name is actually the git commit. We specified the container to use this tag in our ```push-release``` pipeline ```tag: $WERCKER_GIT_COMMIT``` we could have used anything here, such as a hard coded "latest" for example. E.g. ```tag: lastest```
 
+# Step 15: Pipeline to Kubernetes
 
+Next we want to let our Kubernetes cluster know that there is a new container it should load. Now in the real world you would have your own cluster, but for today we will just load it into my Kluster. 
 
+Open up the *Werker.yml* file and add:
+
+```
+deploy:
+  steps:
+    - script:
+      name: update image build with WERCKER_APPLICATION_OWNER_NAME
+      code: sed -ie "s/REPLACE_WITH_WERCKER_APPLICATION_OWNER_NAME/$WERCKER_APPLICATION_OWNER_NAME/g" service.yml
+    - script:
+      name: update image build with WERCKER_GIT_COMMIT
+      code: sed -ie "s/REPLACE_WITH_WERCKER_GIT_COMMIT/$WERCKER_GIT_COMMIT/g" service.yml
+    - script:
+      name: update image build with DOCKER_REPOSITORY
+      code: sed -ie "s/REPLACE_WITH_DOCKER_REPOSITORY/$DOCKER_REPOSITORY/g" service.yml
+    - script:
+      name: show file
+      code: cat service.yml
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: true
+        command: apply -f service.yml
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: true
+        command: get svc --selector=app=audienceanalyser$WERCKER_APPLICATION_OWNER_NAME
+ ```
+ 
+ Save the file and commit this change to GitHub
+ 
+ ``` 
+git add .
+git commit -"Adding the deploy pipline to Git"
+git push 
+```
+# Step 16: Add Environmental Varables
+
+We now need to add the enviroment variables used by the deploy pipeline. Open wercker and look for a tab called "Environment" here add the following 3 keys:
+
+Key | Value 
+--- | --- 
+KUBERNETES_MASTER | https://35.226.220.94
+KUBERNETES_USERNAME | admin
+KUBERNETES_PASSWORD | KGLMz15IHH8LbTL9
+
+# Step 17: Add Deploy pipeline to Workflow
+We must now add deploy to our workflow, to have it as part of the build. Click on the "Workflow tab" and scroll down until you see the "Add new pipeline" button. Once you see it click on it to crete a new pipeline. For both the *name* and the *YML Pipeline name* field add "deploy". Leave the hook type as *Default* and click *Create*. Click the work flows tab again to take you back to your workflow.
+
+Now Next to the "push-release" pipeline you should see a + symbol. Click on this. A pop box will appear go to the 3rd item which is a dropbown called "Execute Pipeline" select the pipeline "deploy" click *Add*.
+
+This will now make the *deploy* pipeline part of you workflow. 
+
+# Step 18: Make a file change and check in
+
+ Go to the file src/index.html and change the title of the page on line 29 to ```<title>Audience Analyser Deploy</title>```
+ 
+ Commit this change to GitHub
+ 
+ ``` 
+git add .
+git commit -"Making Title Change for the second time"
+git push 
+```
 
 
 
