@@ -17,13 +17,13 @@ To build the application you will need to create a few accounts if you do not al
  Fork this project to create your own verion of this project in your GitHub Account. 
  Press the Fork button which on my screen is at the top right of the screen.
  
- #Step 2: Clone the project Locally
+ # Step 2: Clone the project Locally
  
  Pull down the content of the folder locally. If you want you can run the application locally, however, to do that you will 
  need to have Oracle Jet installed. 
  For the purpose of this workshop it is not required to do this You can find instructions on how to build an Oracle Jet application [locally here](http://www.oracle.com/webfolder/technetwork/jet/globalGetStarted.html)
  
-#Step 3: Modify the Application
+# Step 3: Modify the Application
 First lets change some text in the application. Go to the Index.html page and change 
 Hello Dubai to Hello "Your Name". So for me I would change it to Hello Martin.
 
