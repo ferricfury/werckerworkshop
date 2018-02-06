@@ -149,6 +149,28 @@ git commit -"Adding Changes to Wercker file"
 git push 
 ```
 
+# Step 13: Check Build
+If you go to your "run" tab on the Wercker site you should see that a new build has been triggered. Whilst the *Build* pipeline has complete the *push-release* has not. First check the build logs. If you click on the green bar called "build" it should take you through all of the steps that were executed. You should now see a step called "oracle jet build" if you expand it you will see the output from that step.
+
+# Step 14: Add push-release to the workflow
+We must now add push-release to our workflow, to have it as part of the build. Click on the "Workflow tab" and scroll down until you see the "Add new pipeline" button. Once you see it click on it to crete a new pipeline. For both the *name* and the *YML Pipeline name* field add "push-release". Leave the hook type as *Default* and click *Create*. Clcik the work flows tab again to take you back to your workflow.
+
+Now Next to the "build" pipeline you should see a + symbol. Click on this. A pop box will appear go to the 3rd item which is a dropbown called "Execute Pipeline" select the pipeline "push-release" click *Add*.
+
+This will now make the *push-release* pipeline part of you workflow. 
+
+# Step 15: Make a change and commit.
+
+ Go to the file src/index.html and change the title of the page on line 29 to ```<title>My Audience Analyser</title>```
+ 
+ Commit this change to GitHub
+ 
+ ``` 
+git add .
+git commit -"Making Title Change"
+git push 
+```
+
 
 
 
