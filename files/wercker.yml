@@ -1,0 +1,71 @@
+box: node
+build:
+  steps:
+    - npm-install
+    - npm-test
+    - script:
+        name: oracle jet build
+        code: |
+          npm install -g @oracle/ojet-cli
+          ojet build
+    - script:
+        name: copy code to output
+        code: cp -r web "$WERCKER_OUTPUT_DIR"
+    - script:
+        name: copy yml file to output
+        code: cp service.yml "$WERCKER_OUTPUT_DIR"
+push-release:
+  # Override the node:4-slim box
+  box:
+    id: nginx:alpine
+    cmd: /bin/sh
+  steps:
+    - script:
+        name: list whats on disk
+        code: |
+          echo "Listings files on disk" 
+          ls
+          cd web
+          echo "Checing whats in index"
+          cat index.html
+    - script:
+      name: mv static files
+      code: |
+        echo "CAT Index file"
+        cat $WERCKER_SOURCE_DIR/web/index.html
+        ls $WERCKER_SOURCE_DIR/web/
+        rm -rf /usr/share/nginx/html/*
+        mv web/* /usr/share/nginx/html
+    - script:
+      name: list file
+      code: |
+        echo "ls files:"
+        ls
+    - internal/docker-push:
+        disable-sync: true
+        repository: thebeebs/howareyou
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
+        registry: https://registry.hub.docker.com/v2
+        tag: $WERCKER_GIT_COMMIT
+        cmd: nginx -g 'daemon off;'
+deploy:
+  steps:
+    - script:
+      name: update image build
+      code: sed -ie "s/THIS_STRING_IS_REPLACED_DURING_BUILD/$WERCKER_GIT_COMMIT/g" service.yml
+    - script:
+      name: show file
+      code: cat service.yml
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: true
+        command: apply -f service.yml
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: true
+        command: get svc --selector=app=audienceanalyser
