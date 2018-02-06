@@ -32,3 +32,29 @@ push-release:
         registry: https://registry.hub.docker.com/v2
         tag: $WERCKER_GIT_COMMIT
         cmd: nginx -g 'daemon off;'
+deploy:
+  steps:
+    - script:
+      name: update image build with WERCKER_APPLICATION_OWNER_NAME
+      code: sed -ie "s/REPLACE_WITH_WERCKER_APPLICATION_OWNER_NAME/$WERCKER_APPLICATION_OWNER_NAME/g" service.yml
+    - script:
+      name: update image build with WERCKER_GIT_COMMIT
+      code: sed -ie "s/REPLACE_WITH_WERCKER_GIT_COMMIT/$WERCKER_GIT_COMMIT/g" service.yml
+    - script:
+      name: update image build with DOCKER_REPOSITORY
+      code: sed -ie "s/REPLACE_WITH_DOCKER_REPOSITORY/$DOCKER_REPOSITORY/g" service.yml
+    - script:
+      name: show file
+      code: cat service.yml
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: true
+        command: apply -f service.yml
+    - kubectl:
+        server: $KUBERNETES_MASTER
+        username: $KUBERNETES_USERNAME
+        password: $KUBERNETES_PASSWORD
+        insecure-skip-tls-verify: true
+        command: get svc --selector=app=audienceanalyser$WERCKER_APPLICATION_OWNER_NAME
