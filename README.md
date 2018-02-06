@@ -136,9 +136,9 @@ Now we have a repository we can go about setting up our enviroment names. Open w
 
 Key | Value 
 --- | --- 
-$DOCKER_REPOSITORY | yourDockerAccount/werckerworkshop
-$DOCKER_USERNAME | YourUsername
-$DOCKER_PASSWORD | YourPassword
+DOCKER_REPOSITORY | yourDockerAccount/werckerworkshop
+DOCKER_USERNAME | YourUsername
+DOCKER_PASSWORD | YourPassword
 
 
 
